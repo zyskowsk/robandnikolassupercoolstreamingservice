@@ -39,7 +39,7 @@ func serve_cached_song_handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(song_bytes))
 }
 
-func get_uris(song_id int) []string {
+func get_uris(song_id int) []Uri {
 	url := fmt.Sprintf("http://%s:%d?%s=%d", SERVER_HOST, SERVER_PORT, SONG_ID_GET_PARAM, song_id)
 	fmt.Printf("url = %s\n", url)
 	response, err := http.Get(url)
@@ -49,15 +49,15 @@ func get_uris(song_id int) []string {
 	}
 
 	defer response.Body.Close()
-	var uris []string
+	var uris []Uri
 	body_content, _ := ioutil.ReadAll(response.Body)
 	json.Unmarshal(body_content, &uris)
 
 	return uris
 }
 
-func get_song_from_client(song_id int, client_uri string) {
-	url := fmt.Sprintf("http://%s/%s?%s=%d", client_uri, CLIENT_ENDPOINT, SONG_ID_GET_PARAM, song_id)
+func get_song_from_client(song_id int, uri Uri) {
+	url := fmt.Sprintf("http://%s:%d/%s?%s=%d", uri.Ip, uri.Host, CLIENT_ENDPOINT, SONG_ID_GET_PARAM, song_id)
 	fmt.Printf(url)
 	response, err := http.Get(url)
 	if err != nil {

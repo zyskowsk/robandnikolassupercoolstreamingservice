@@ -2,6 +2,7 @@ package main
 
 import (
     "fmt"
+	"net"
     "net/http"
 	"log"
 	"strconv"
@@ -11,14 +12,16 @@ import (
 
 var SONG_ID_GET_PARAM = "id"
 
-func get_song_hosts(song_id int) []string {
-	ips := map[int][]string{
-		123: []string{"127.0.0.1:4002"},
-		345: []string{"127.0.0.1:4003", "456.12.21.12"},
+func get_song_hosts(song_id int) []Uri {
+	ips := map[int][]Uri{
+		123: []Uri{Uri{Ip: net.IPv4(127, 0, 0, 1), Host: 4002 }},
+		345: []Uri{Uri{Ip: net.IPv4(127, 0, 0, 1), Host: 4003 }},
 	}
 	song_ips := ips[song_id]
+	fmt.Printf("song_ips = %s", song_ips)
 	if song_ips == nil {
-		return []string{}
+		fmt.Printf("yeah you were right")
+		return []Uri{}
 	}
 	return song_ips
 }
