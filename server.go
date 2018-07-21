@@ -13,8 +13,8 @@ var SONG_ID_GET_PARAM = "id"
 
 func get_song_hosts(song_id int) []string {
 	ips := map[int][]string{
-		123: []string{"127.0.0.1"},
-		345: []string{"123.4.5.6", "456.12.21.12"},
+		123: []string{"127.0.0.1:4002"},
+		345: []string{"127.0.0.1:4003", "456.12.21.12"},
 	}
 	song_ips := ips[song_id]
 	if song_ips == nil {
