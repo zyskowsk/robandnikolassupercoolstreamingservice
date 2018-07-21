@@ -18,9 +18,7 @@ func get_song_hosts(song_id int) []Uri {
 		345: []Uri{Uri{Ip: net.IPv4(127, 0, 0, 1), Host: 4003 }},
 	}
 	song_ips := ips[song_id]
-	fmt.Printf("song_ips = %s", song_ips)
 	if song_ips == nil {
-		fmt.Printf("yeah you were right")
 		return []Uri{}
 	}
 	return song_ips
