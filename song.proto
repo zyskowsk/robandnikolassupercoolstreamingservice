@@ -1,0 +1,39 @@
+syntax = "proto3";
+package main;
+
+option go_package = "main";
+
+message SongChunk {
+  string name = 1;
+  int32 id = 2;
+  bytes raw_bytes = 3;
+  int32 chunk_index = 4;
+  int32 offset = 5;
+  int32 size = 6;
+}
+
+message SongRequest {
+  string request_id = 1;
+  string client_id = 2;
+  oneof request {
+    SongChunkRequest song_chunk_request = 3;
+  }
+}
+
+message SongResponse {
+  string request_id = 1;
+  string client_id = 2;
+  oneof response {
+    SongChunkResponse song_chunk_response = 3;
+  }
+}
+
+message SongChunkRequest {
+  int32 id = 1;
+  int32 chunk_index = 2;
+}
+
+message SongChunkResponse {
+  bool success = 1;
+  SongChunk song_chunk = 2;
+}

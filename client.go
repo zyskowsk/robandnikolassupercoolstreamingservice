@@ -1,98 +1,64 @@
 package main
 
 import (
-    "fmt"
-	"strings"
-    "net/http"
-	"os"
-	"io/ioutil"
-	"encoding/json"
-	"strconv"
+	"net"
+	"fmt"
+	"github.com/golang/protobuf/proto"
 )
 
-var SONG_ID_GET_PARAM = "id"
-var SERVER_HOST = "localhost"
-var SERVER_PORT = 8080
-var CLIENT_ENDPOINT = "song"
+const (
+	SERVER_HOST = "127.0.0.1"
+)
 
-func get_cached_song_by_id(song_id int) []byte {
-	bytes := map[int][]byte{
-		123: []byte("firstsongbytes"),
-		345: []byte("secondsongbytes"),
-	}
-	song_bytes := bytes[song_id]
-	if song_bytes == nil {
-		return []byte{}
-	}
-	return song_bytes
+type SongClient struct {
+	Port int32
 }
 
-func serve_cached_song_handler(w http.ResponseWriter, r *http.Request) {
-	song_id, err := strconv.Atoi(r.URL.Query()[SONG_ID_GET_PARAM][0])
+func (c SongClient) Name() (string) {
+	return fmt.Sprintf("Client%d", c.Port)
+}
+
+func (c *SongClient) RequestSongChunk(id int32, chunkind int32) (error) {
+	fmt.Printf("%s requesting song chunk\n", c.Name())
+
+	adr := fmt.Sprintf("%s:%d", SERVER_HOST, SERVER_PORT)
+	conn, err := net.Dial(CONN_TYPE, adr)
+
 	if err != nil {
-		os.Exit(2)
+		fmt.Println(err)
+		return err
 	}
+	
+	// learned what defer means, basically execute this line just before any `return` anywhere in the this function
+	// similar to try-catch-finally in more traditional languages
+	// nicer way to reduce boilerplate code 
+	defer conn.Close()
 
-	fmt.Printf("Request comming, id = %d\n", song_id)
+	req := &SongRequest{
+		RequestId: "arbitratyid",
+		ClientId: c.Name(),
+		Request: &SongRequest_SongChunkRequest{
+			SongChunkRequest: &SongChunkRequest{
+				Id: id,
+				ChunkIndex: chunkind,
+			},
+		},
+	}
+	data, err := proto.Marshal(req)
+	n, err := conn.Write(data)
 
-	var song_bytes = get_cached_song_by_id(song_id)
-	fmt.Fprintf(w, string(song_bytes))
-}
+	fmt.Printf("Sent %d bytes to SongServer at %s\n", n, adr)
 
-func get_uris(song_id int) []Uri {
-	url := fmt.Sprintf("http://%s:%d?%s=%d", SERVER_HOST, SERVER_PORT, SONG_ID_GET_PARAM, song_id)
-	response, err := http.Get(url)
+	data = make([]byte, DATA_BUF_SIZE)
+	n, err = conn.Read(data)
+	res := &SongResponse{}
+	err = proto.Unmarshal(data[:n], res)
+
 	if err != nil {
-		fmt.Printf("Error: %s", err)
-		os.Exit(2)
+		fmt.Println(err)
+		return err
 	}
-
-	defer response.Body.Close()
-	var uris []Uri
-	body_content, _ := ioutil.ReadAll(response.Body)
-	json.Unmarshal(body_content, &uris)
-
-	return uris
-}
-
-func get_song_from_client(song_id int, uri Uri) {
-	url := fmt.Sprintf("http://%s:%d/%s?%s=%d", uri.Ip, uri.Host, CLIENT_ENDPOINT, SONG_ID_GET_PARAM, song_id)
-	response, err := http.Get(url)
-	if err != nil {
-		fmt.Printf("Error: %s", err)
-		os.Exit(2)
-	}
-
-	defer response.Body.Close()
-	body_content, _ := ioutil.ReadAll(response.Body)
-	fmt.Printf("response for song_id: %d, %s\n", song_id, body_content)
-}
-
-func main() {
-	port := os.Args[1:][0]
-
-    http.HandleFunc("/" + CLIENT_ENDPOINT, serve_cached_song_handler)
-    go http.ListenAndServe(":" + port, nil)
-
-	for {
-		var response string
-		fmt.Scanln(&response)
-		if response == "n" {
-			return
-		}
-		if response[:5] == "play:" {
-			song_id, err := strconv.Atoi(strings.Split(response, ":")[1])
-			if err != nil {
-				os.Exit(2)
-			}
-
-			uris := get_uris(song_id)
-
-			if len(uris) > 0 {
-				get_song_from_client(song_id, uris[0])
-			} else {
-				fmt.Printf("Song is not available, song_id:%d\n", song_id)
-			}
-		}
-	}
+	
+	fmt.Printf("Received a response with length %d\n%s\n", n, res)
+	return nil
 }
