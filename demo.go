@@ -16,6 +16,9 @@ func main() {
 	var s = SongServer{}
 	go s.Run(SERVER_PORT)
 
+	// Give server some time to spin up
+	time.Sleep(1 * time.Second)
+
 	// Start one client instance
 	var c = SongClient{
 		Port: CLIENT_PORTS[0],

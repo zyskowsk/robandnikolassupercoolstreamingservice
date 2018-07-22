@@ -27,41 +27,46 @@ func (s *SongServer) Run(port int32) (error) {
 	s.l = l
 
 	if err != nil {
+		fmt.Println("Error while starting SongServer")
+		fmt.Println(err)
 		return err
 	}
 
 	fmt.Printf("SongServer listening on %s\n", adr)
 
+	// Spin a new goroutine that logs responses
 	go s.ResponseLogger()
 
 	for {
 		conn, err := s.l.Accept()
 
 		if err != nil {
+			fmt.Println("Error while accepting connection, Listener closed")
+			fmt.Println(err)
 			return err
 		}
 
-		fmt.Print("Got a connection\n")
 		go s.Process_request(conn)
 	}
 
+	// No error
 	return nil
 }
 
 func (s *SongServer) ResponseLogger() {
 	for {
 		res := <- s.response_chan
-		fmt.Printf("Sent a reponse %s\n", res)
+		fmt.Printf("SongServer sent a reponse %s\n", res)
 	}
 }
 
 func (s *SongServer) Close() {
-	adr := fmt.Sprintf("%s:%d", CONN_HOST, s.port)
-	fmt.Printf("SongServer stopping on %s\n", adr)
+	fmt.Println("SongServer stopping")
 	s.l.Close()
 }
 
 func (s *SongServer) Get_song_chunk(req SongChunkRequest) (SongChunk, error) {
+	// Not implemented
 	return SongChunk{
 		Name: "SongName",	// random
 		Id: req.Id,
@@ -75,20 +80,53 @@ func (s *SongServer) Get_song_chunk(req SongChunkRequest) (SongChunk, error) {
 func (s *SongServer) Process_request(conn net.Conn) (error) {
 	defer conn.Close()
 
+	send_response_to_client := func (conn net.Conn, res *SongResponse) (error) {
+		// Log the response
+		s.response_chan <- *res
+
+		data, err := proto.Marshal(res)
+		if err != nil {
+			fmt.Println("Error while Marshaling response")
+			fmt.Println(err)
+			return err
+		}
+
+		n, err := conn.Write(data)
+		if err != nil {
+			fmt.Println("Error while writing bytes to connection")
+			fmt.Println(err)
+			return err
+		}
+		fmt.Printf("SongServer sent %d bytes to client %s\n", n, res.ClientId)
+		return nil
+	}
+
 	data := make([]byte, DATA_BUF_SIZE)
 	n, err := conn.Read(data)
-	fmt.Printf("Got %d bytes from client\n", n)
+	if err != nil {
+		fmt.Println("Error while reading bytes from connection")
+		fmt.Println(err)
+		return err
+	}
+
+	fmt.Printf("SongServer got %d bytes from (yet) unknown client\n", n)
 
 	req := &SongRequest{}
 	err = proto.Unmarshal(data[:n], req)
 
 	if err != nil {
-		s.response_chan <- SongResponse{}
+		res := &SongResponse{
+			RequestId: req.RequestId,
+			ClientId: req.ClientId,
+		}
+		fmt.Println("Error while Unmarshaling request")
 		fmt.Println(err)
+		send_response_to_client(conn, res)
 		return err
 	}
 
-	fmt.Printf("Received a request with length %d\n%s\n", n, req)
+	fmt.Printf("SongServer received a request from client %s\n", req.ClientId)
+	fmt.Println(req)
 
 	// We got the request now, determine it's type
 	switch x := req.Request.(type) {
@@ -96,6 +134,7 @@ func (s *SongServer) Process_request(conn net.Conn) (error) {
 			song_chunk_res, err := s.Get_song_chunk(*x.SongChunkRequest)
 
 			if err != nil {
+				fmt.Println("Error while computing song chunk")
 				fmt.Println(err)
 				break
 			}
@@ -111,16 +150,17 @@ func (s *SongServer) Process_request(conn net.Conn) (error) {
 				},
 			}
 
-			s.response_chan <- *res
-			data, err = proto.Marshal(res)
-			n, err = conn.Write(data)
-			fmt.Printf("Sent %d bytes to client", n)
+			send_response_to_client(conn, res)
 			// No error
 			return nil
 	default:
 		return fmt.Errorf("Request has unexpected type %T", x)
 	}
 
-	s.response_chan <- SongResponse{}
+	res := &SongResponse{
+		RequestId: req.RequestId,
+		ClientId: req.ClientId,
+	}
+	send_response_to_client(conn, res)
 	return fmt.Errorf("Invalid request type")
 }
