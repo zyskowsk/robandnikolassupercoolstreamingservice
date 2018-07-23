@@ -1,4 +1,4 @@
-package main 
+package main
 
 import (
 	"time"
@@ -9,7 +9,7 @@ const (
 )
 
 // No array constants in Go
-var CLIENT_PORTS = [...]int32 { 4002, 4003, 4004 }
+var CLIENT_PORTS = [...]int32{4002, 4003, 4004}
 
 func main() {
 	// Start a server instance
@@ -24,7 +24,7 @@ func main() {
 		Port: CLIENT_PORTS[0],
 	}
 	go c.RequestSongChunk(100, 1)
-	
+
 	// Sleep so we make sure goroutines are executed
 	time.Sleep(10 * time.Second)
 

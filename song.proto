@@ -34,6 +34,33 @@ message SongChunkRequest {
 }
 
 message SongChunkResponse {
-  bool success = 1;
-  SongChunk song_chunk = 2;
+  SongChunk song_chunk = 1;
 }
+
+message ListIPsRequest {
+  string request_id = 1;
+  string client_id = 2;
+  int32 song_id = 3;
+}
+
+message ListIPsResponse {
+  string request_id = 1;
+  string client_id = 2;
+  int32 song_id = 3;
+  repeated string ips = 4;
+}
+  
+message ServerRequest {
+  oneof request {
+    SongRequest song_request = 1;
+    ListIPsRequest list_ips_request = 2;
+  }
+}
+ 
+message ServerResponse {
+  bool success = 1;
+  oneof response {
+    SongResponse song_response = 2;
+    ListIPsResponse list_ips_response = 3;
+  }
+}   

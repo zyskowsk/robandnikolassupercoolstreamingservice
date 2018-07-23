@@ -34,7 +34,7 @@ func (m *SongChunk) Reset()         { *m = SongChunk{} }
 func (m *SongChunk) String() string { return proto.CompactTextString(m) }
 func (*SongChunk) ProtoMessage()    {}
 func (*SongChunk) Descriptor() ([]byte, []int) {
-	return fileDescriptor_song_b96fd28c72daf125, []int{0}
+	return fileDescriptor_song_e84cfab846309661, []int{0}
 }
 func (m *SongChunk) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_SongChunk.Unmarshal(m, b)
@@ -111,7 +111,7 @@ func (m *SongRequest) Reset()         { *m = SongRequest{} }
 func (m *SongRequest) String() string { return proto.CompactTextString(m) }
 func (*SongRequest) ProtoMessage()    {}
 func (*SongRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_song_b96fd28c72daf125, []int{1}
+	return fileDescriptor_song_e84cfab846309661, []int{1}
 }
 func (m *SongRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_SongRequest.Unmarshal(m, b)
@@ -239,7 +239,7 @@ func (m *SongResponse) Reset()         { *m = SongResponse{} }
 func (m *SongResponse) String() string { return proto.CompactTextString(m) }
 func (*SongResponse) ProtoMessage()    {}
 func (*SongResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_song_b96fd28c72daf125, []int{2}
+	return fileDescriptor_song_e84cfab846309661, []int{2}
 }
 func (m *SongResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_SongResponse.Unmarshal(m, b)
@@ -364,7 +364,7 @@ func (m *SongChunkRequest) Reset()         { *m = SongChunkRequest{} }
 func (m *SongChunkRequest) String() string { return proto.CompactTextString(m) }
 func (*SongChunkRequest) ProtoMessage()    {}
 func (*SongChunkRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_song_b96fd28c72daf125, []int{3}
+	return fileDescriptor_song_e84cfab846309661, []int{3}
 }
 func (m *SongChunkRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_SongChunkRequest.Unmarshal(m, b)
@@ -399,8 +399,7 @@ func (m *SongChunkRequest) GetChunkIndex() int32 {
 }
 
 type SongChunkResponse struct {
-	Success              bool       `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	SongChunk            *SongChunk `protobuf:"bytes,2,opt,name=song_chunk,json=songChunk,proto3" json:"song_chunk,omitempty"`
+	SongChunk            *SongChunk `protobuf:"bytes,1,opt,name=song_chunk,json=songChunk,proto3" json:"song_chunk,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
 	XXX_unrecognized     []byte     `json:"-"`
 	XXX_sizecache        int32      `json:"-"`
@@ -410,7 +409,7 @@ func (m *SongChunkResponse) Reset()         { *m = SongChunkResponse{} }
 func (m *SongChunkResponse) String() string { return proto.CompactTextString(m) }
 func (*SongChunkResponse) ProtoMessage()    {}
 func (*SongChunkResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_song_b96fd28c72daf125, []int{4}
+	return fileDescriptor_song_e84cfab846309661, []int{4}
 }
 func (m *SongChunkResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_SongChunkResponse.Unmarshal(m, b)
@@ -430,18 +429,421 @@ func (m *SongChunkResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_SongChunkResponse proto.InternalMessageInfo
 
-func (m *SongChunkResponse) GetSuccess() bool {
+func (m *SongChunkResponse) GetSongChunk() *SongChunk {
+	if m != nil {
+		return m.SongChunk
+	}
+	return nil
+}
+
+type ListIPsRequest struct {
+	RequestId            string   `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
+	ClientId             string   `protobuf:"bytes,2,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
+	SongId               int32    `protobuf:"varint,3,opt,name=song_id,json=songId,proto3" json:"song_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ListIPsRequest) Reset()         { *m = ListIPsRequest{} }
+func (m *ListIPsRequest) String() string { return proto.CompactTextString(m) }
+func (*ListIPsRequest) ProtoMessage()    {}
+func (*ListIPsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_song_e84cfab846309661, []int{5}
+}
+func (m *ListIPsRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListIPsRequest.Unmarshal(m, b)
+}
+func (m *ListIPsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListIPsRequest.Marshal(b, m, deterministic)
+}
+func (dst *ListIPsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListIPsRequest.Merge(dst, src)
+}
+func (m *ListIPsRequest) XXX_Size() int {
+	return xxx_messageInfo_ListIPsRequest.Size(m)
+}
+func (m *ListIPsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListIPsRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListIPsRequest proto.InternalMessageInfo
+
+func (m *ListIPsRequest) GetRequestId() string {
+	if m != nil {
+		return m.RequestId
+	}
+	return ""
+}
+
+func (m *ListIPsRequest) GetClientId() string {
+	if m != nil {
+		return m.ClientId
+	}
+	return ""
+}
+
+func (m *ListIPsRequest) GetSongId() int32 {
+	if m != nil {
+		return m.SongId
+	}
+	return 0
+}
+
+type ListIPsResponse struct {
+	RequestId            string   `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
+	ClientId             string   `protobuf:"bytes,2,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
+	SongId               int32    `protobuf:"varint,3,opt,name=song_id,json=songId,proto3" json:"song_id,omitempty"`
+	Ips                  []string `protobuf:"bytes,4,rep,name=ips,proto3" json:"ips,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ListIPsResponse) Reset()         { *m = ListIPsResponse{} }
+func (m *ListIPsResponse) String() string { return proto.CompactTextString(m) }
+func (*ListIPsResponse) ProtoMessage()    {}
+func (*ListIPsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_song_e84cfab846309661, []int{6}
+}
+func (m *ListIPsResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListIPsResponse.Unmarshal(m, b)
+}
+func (m *ListIPsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListIPsResponse.Marshal(b, m, deterministic)
+}
+func (dst *ListIPsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListIPsResponse.Merge(dst, src)
+}
+func (m *ListIPsResponse) XXX_Size() int {
+	return xxx_messageInfo_ListIPsResponse.Size(m)
+}
+func (m *ListIPsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListIPsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListIPsResponse proto.InternalMessageInfo
+
+func (m *ListIPsResponse) GetRequestId() string {
+	if m != nil {
+		return m.RequestId
+	}
+	return ""
+}
+
+func (m *ListIPsResponse) GetClientId() string {
+	if m != nil {
+		return m.ClientId
+	}
+	return ""
+}
+
+func (m *ListIPsResponse) GetSongId() int32 {
+	if m != nil {
+		return m.SongId
+	}
+	return 0
+}
+
+func (m *ListIPsResponse) GetIps() []string {
+	if m != nil {
+		return m.Ips
+	}
+	return nil
+}
+
+type ServerRequest struct {
+	// Types that are valid to be assigned to Request:
+	//	*ServerRequest_SongRequest
+	//	*ServerRequest_ListIpsRequest
+	Request              isServerRequest_Request `protobuf_oneof:"request"`
+	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
+	XXX_unrecognized     []byte                  `json:"-"`
+	XXX_sizecache        int32                   `json:"-"`
+}
+
+func (m *ServerRequest) Reset()         { *m = ServerRequest{} }
+func (m *ServerRequest) String() string { return proto.CompactTextString(m) }
+func (*ServerRequest) ProtoMessage()    {}
+func (*ServerRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_song_e84cfab846309661, []int{7}
+}
+func (m *ServerRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ServerRequest.Unmarshal(m, b)
+}
+func (m *ServerRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ServerRequest.Marshal(b, m, deterministic)
+}
+func (dst *ServerRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ServerRequest.Merge(dst, src)
+}
+func (m *ServerRequest) XXX_Size() int {
+	return xxx_messageInfo_ServerRequest.Size(m)
+}
+func (m *ServerRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ServerRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ServerRequest proto.InternalMessageInfo
+
+type isServerRequest_Request interface {
+	isServerRequest_Request()
+}
+
+type ServerRequest_SongRequest struct {
+	SongRequest *SongRequest `protobuf:"bytes,1,opt,name=song_request,json=songRequest,proto3,oneof"`
+}
+type ServerRequest_ListIpsRequest struct {
+	ListIpsRequest *ListIPsRequest `protobuf:"bytes,2,opt,name=list_ips_request,json=listIpsRequest,proto3,oneof"`
+}
+
+func (*ServerRequest_SongRequest) isServerRequest_Request()    {}
+func (*ServerRequest_ListIpsRequest) isServerRequest_Request() {}
+
+func (m *ServerRequest) GetRequest() isServerRequest_Request {
+	if m != nil {
+		return m.Request
+	}
+	return nil
+}
+
+func (m *ServerRequest) GetSongRequest() *SongRequest {
+	if x, ok := m.GetRequest().(*ServerRequest_SongRequest); ok {
+		return x.SongRequest
+	}
+	return nil
+}
+
+func (m *ServerRequest) GetListIpsRequest() *ListIPsRequest {
+	if x, ok := m.GetRequest().(*ServerRequest_ListIpsRequest); ok {
+		return x.ListIpsRequest
+	}
+	return nil
+}
+
+// XXX_OneofFuncs is for the internal use of the proto package.
+func (*ServerRequest) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error, func(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error), func(msg proto.Message) (n int), []interface{}) {
+	return _ServerRequest_OneofMarshaler, _ServerRequest_OneofUnmarshaler, _ServerRequest_OneofSizer, []interface{}{
+		(*ServerRequest_SongRequest)(nil),
+		(*ServerRequest_ListIpsRequest)(nil),
+	}
+}
+
+func _ServerRequest_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
+	m := msg.(*ServerRequest)
+	// request
+	switch x := m.Request.(type) {
+	case *ServerRequest_SongRequest:
+		b.EncodeVarint(1<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.SongRequest); err != nil {
+			return err
+		}
+	case *ServerRequest_ListIpsRequest:
+		b.EncodeVarint(2<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.ListIpsRequest); err != nil {
+			return err
+		}
+	case nil:
+	default:
+		return fmt.Errorf("ServerRequest.Request has unexpected type %T", x)
+	}
+	return nil
+}
+
+func _ServerRequest_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error) {
+	m := msg.(*ServerRequest)
+	switch tag {
+	case 1: // request.song_request
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(SongRequest)
+		err := b.DecodeMessage(msg)
+		m.Request = &ServerRequest_SongRequest{msg}
+		return true, err
+	case 2: // request.list_ips_request
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(ListIPsRequest)
+		err := b.DecodeMessage(msg)
+		m.Request = &ServerRequest_ListIpsRequest{msg}
+		return true, err
+	default:
+		return false, nil
+	}
+}
+
+func _ServerRequest_OneofSizer(msg proto.Message) (n int) {
+	m := msg.(*ServerRequest)
+	// request
+	switch x := m.Request.(type) {
+	case *ServerRequest_SongRequest:
+		s := proto.Size(x.SongRequest)
+		n += 1 // tag and wire
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *ServerRequest_ListIpsRequest:
+		s := proto.Size(x.ListIpsRequest)
+		n += 1 // tag and wire
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case nil:
+	default:
+		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
+	}
+	return n
+}
+
+type ServerResponse struct {
+	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	// Types that are valid to be assigned to Response:
+	//	*ServerResponse_SongResponse
+	//	*ServerResponse_ListIpsResponse
+	Response             isServerResponse_Response `protobuf_oneof:"response"`
+	XXX_NoUnkeyedLiteral struct{}                  `json:"-"`
+	XXX_unrecognized     []byte                    `json:"-"`
+	XXX_sizecache        int32                     `json:"-"`
+}
+
+func (m *ServerResponse) Reset()         { *m = ServerResponse{} }
+func (m *ServerResponse) String() string { return proto.CompactTextString(m) }
+func (*ServerResponse) ProtoMessage()    {}
+func (*ServerResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_song_e84cfab846309661, []int{8}
+}
+func (m *ServerResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ServerResponse.Unmarshal(m, b)
+}
+func (m *ServerResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ServerResponse.Marshal(b, m, deterministic)
+}
+func (dst *ServerResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ServerResponse.Merge(dst, src)
+}
+func (m *ServerResponse) XXX_Size() int {
+	return xxx_messageInfo_ServerResponse.Size(m)
+}
+func (m *ServerResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ServerResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ServerResponse proto.InternalMessageInfo
+
+type isServerResponse_Response interface {
+	isServerResponse_Response()
+}
+
+type ServerResponse_SongResponse struct {
+	SongResponse *SongResponse `protobuf:"bytes,2,opt,name=song_response,json=songResponse,proto3,oneof"`
+}
+type ServerResponse_ListIpsResponse struct {
+	ListIpsResponse *ListIPsResponse `protobuf:"bytes,3,opt,name=list_ips_response,json=listIpsResponse,proto3,oneof"`
+}
+
+func (*ServerResponse_SongResponse) isServerResponse_Response()    {}
+func (*ServerResponse_ListIpsResponse) isServerResponse_Response() {}
+
+func (m *ServerResponse) GetResponse() isServerResponse_Response {
+	if m != nil {
+		return m.Response
+	}
+	return nil
+}
+
+func (m *ServerResponse) GetSuccess() bool {
 	if m != nil {
 		return m.Success
 	}
 	return false
 }
 
-func (m *SongChunkResponse) GetSongChunk() *SongChunk {
-	if m != nil {
-		return m.SongChunk
+func (m *ServerResponse) GetSongResponse() *SongResponse {
+	if x, ok := m.GetResponse().(*ServerResponse_SongResponse); ok {
+		return x.SongResponse
 	}
 	return nil
+}
+
+func (m *ServerResponse) GetListIpsResponse() *ListIPsResponse {
+	if x, ok := m.GetResponse().(*ServerResponse_ListIpsResponse); ok {
+		return x.ListIpsResponse
+	}
+	return nil
+}
+
+// XXX_OneofFuncs is for the internal use of the proto package.
+func (*ServerResponse) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error, func(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error), func(msg proto.Message) (n int), []interface{}) {
+	return _ServerResponse_OneofMarshaler, _ServerResponse_OneofUnmarshaler, _ServerResponse_OneofSizer, []interface{}{
+		(*ServerResponse_SongResponse)(nil),
+		(*ServerResponse_ListIpsResponse)(nil),
+	}
+}
+
+func _ServerResponse_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
+	m := msg.(*ServerResponse)
+	// response
+	switch x := m.Response.(type) {
+	case *ServerResponse_SongResponse:
+		b.EncodeVarint(2<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.SongResponse); err != nil {
+			return err
+		}
+	case *ServerResponse_ListIpsResponse:
+		b.EncodeVarint(3<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.ListIpsResponse); err != nil {
+			return err
+		}
+	case nil:
+	default:
+		return fmt.Errorf("ServerResponse.Response has unexpected type %T", x)
+	}
+	return nil
+}
+
+func _ServerResponse_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error) {
+	m := msg.(*ServerResponse)
+	switch tag {
+	case 2: // response.song_response
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(SongResponse)
+		err := b.DecodeMessage(msg)
+		m.Response = &ServerResponse_SongResponse{msg}
+		return true, err
+	case 3: // response.list_ips_response
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(ListIPsResponse)
+		err := b.DecodeMessage(msg)
+		m.Response = &ServerResponse_ListIpsResponse{msg}
+		return true, err
+	default:
+		return false, nil
+	}
+}
+
+func _ServerResponse_OneofSizer(msg proto.Message) (n int) {
+	m := msg.(*ServerResponse)
+	// response
+	switch x := m.Response.(type) {
+	case *ServerResponse_SongResponse:
+		s := proto.Size(x.SongResponse)
+		n += 1 // tag and wire
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *ServerResponse_ListIpsResponse:
+		s := proto.Size(x.ListIpsResponse)
+		n += 1 // tag and wire
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case nil:
+	default:
+		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
+	}
+	return n
 }
 
 func init() {
@@ -450,32 +852,46 @@ func init() {
 	proto.RegisterType((*SongResponse)(nil), "main.SongResponse")
 	proto.RegisterType((*SongChunkRequest)(nil), "main.SongChunkRequest")
 	proto.RegisterType((*SongChunkResponse)(nil), "main.SongChunkResponse")
+	proto.RegisterType((*ListIPsRequest)(nil), "main.ListIPsRequest")
+	proto.RegisterType((*ListIPsResponse)(nil), "main.ListIPsResponse")
+	proto.RegisterType((*ServerRequest)(nil), "main.ServerRequest")
+	proto.RegisterType((*ServerResponse)(nil), "main.ServerResponse")
 }
 
-func init() { proto.RegisterFile("song.proto", fileDescriptor_song_b96fd28c72daf125) }
+func init() { proto.RegisterFile("song.proto", fileDescriptor_song_e84cfab846309661) }
 
-var fileDescriptor_song_b96fd28c72daf125 = []byte{
-	// 343 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x92, 0xcd, 0x4e, 0xc2, 0x40,
-	0x10, 0xc7, 0xd9, 0x0a, 0xa5, 0x9d, 0x12, 0x85, 0x35, 0xc1, 0x26, 0xc6, 0x48, 0x7a, 0xe2, 0xd4,
-	0x03, 0xbe, 0x41, 0x49, 0x0c, 0xbd, 0xae, 0x37, 0x13, 0xd3, 0x94, 0x76, 0xc1, 0x8d, 0xb2, 0xc5,
-	0x6e, 0x09, 0xea, 0x9b, 0x98, 0x78, 0xf1, 0x4d, 0xcd, 0xce, 0x2e, 0x24, 0x96, 0xa3, 0xb7, 0x99,
-	0xff, 0x64, 0x66, 0x7e, 0xf3, 0x01, 0xa0, 0x2a, 0xb9, 0x8e, 0xb7, 0x75, 0xd5, 0x54, 0xb4, 0xbb,
-	0xc9, 0x85, 0x8c, 0xbe, 0x08, 0xf8, 0x0f, 0x95, 0x5c, 0xcf, 0x9f, 0x77, 0xf2, 0x85, 0x52, 0xe8,
-	0xca, 0x7c, 0xc3, 0x43, 0x32, 0x21, 0x53, 0x9f, 0xa1, 0x4d, 0xcf, 0xc1, 0x11, 0x65, 0xe8, 0x4c,
-	0xc8, 0xb4, 0xc7, 0x1c, 0x51, 0xd2, 0x6b, 0xf0, 0xeb, 0x7c, 0x9f, 0x2d, 0x3f, 0x1a, 0xae, 0xc2,
-	0xb3, 0x09, 0x99, 0x0e, 0x98, 0x57, 0xe7, 0xfb, 0x44, 0xfb, 0xf4, 0x16, 0x82, 0x42, 0x57, 0xca,
-	0x84, 0x2c, 0xf9, 0x7b, 0xd8, 0xc5, 0x2c, 0x40, 0x29, 0xd5, 0x0a, 0x1d, 0x83, 0x5b, 0xad, 0x56,
-	0x8a, 0x37, 0x61, 0x0f, 0x63, 0xd6, 0xd3, 0x9d, 0x95, 0xf8, 0xe4, 0xa1, 0x8b, 0x2a, 0xda, 0xd1,
-	0x37, 0x81, 0x40, 0xb3, 0x31, 0xfe, 0xb6, 0xe3, 0xaa, 0xa1, 0x37, 0x00, 0xb5, 0x31, 0x33, 0x51,
-	0x5a, 0x46, 0xdf, 0x2a, 0x29, 0x82, 0x15, 0xaf, 0x82, 0x4b, 0x8c, 0x3a, 0x18, 0xf5, 0x8c, 0x90,
-	0x96, 0xf4, 0x1e, 0xa8, 0x9e, 0x3d, 0x33, 0x74, 0x36, 0x09, 0xf1, 0x83, 0xd9, 0x38, 0xd6, 0xab,
-	0x88, 0x8f, 0x6b, 0xb0, 0xfd, 0x16, 0x1d, 0x36, 0x54, 0x2d, 0x2d, 0xf1, 0xa1, 0x6f, 0x93, 0xa3,
-	0x1f, 0x02, 0x03, 0x83, 0xa7, 0xb6, 0x95, 0x54, 0xfc, 0x5f, 0x7c, 0x29, 0x5c, 0xfe, 0xe1, 0x33,
-	0x25, 0x2d, 0xe0, 0xd5, 0x09, 0xa0, 0x09, 0x2f, 0x3a, 0x6c, 0xa4, 0xda, 0x62, 0x02, 0xe0, 0x1d,
-	0xf2, 0xa3, 0x39, 0x0c, 0xdb, 0x63, 0xd9, 0x83, 0x92, 0xe3, 0x41, 0x5b, 0x37, 0x73, 0xda, 0x37,
-	0x8b, 0x9e, 0x60, 0x74, 0xd2, 0x9a, 0x86, 0xd0, 0x57, 0xbb, 0xa2, 0xe0, 0x4a, 0x61, 0x29, 0x8f,
-	0x1d, 0x5c, 0x1a, 0x9b, 0x37, 0x33, 0xa3, 0x60, 0xb9, 0x60, 0x76, 0xd1, 0x9e, 0xc0, 0x3f, 0x72,
-	0x27, 0xee, 0x23, 0xbe, 0xe2, 0xd2, 0xc5, 0xbf, 0xbc, 0xfb, 0x0d, 0x00, 0x00, 0xff, 0xff, 0x80,
-	0x0c, 0xf9, 0xc7, 0xa5, 0x02, 0x00, 0x00,
+var fileDescriptor_song_e84cfab846309661 = []byte{
+	// 500 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x94, 0xcf, 0x6e, 0xd3, 0x40,
+	0x10, 0xc6, 0xb3, 0x4e, 0xe2, 0xc4, 0xe3, 0x34, 0x7f, 0x16, 0x68, 0x2d, 0x21, 0x44, 0xe4, 0x53,
+	0x4e, 0x39, 0x14, 0x09, 0x89, 0x1b, 0x4a, 0x24, 0x14, 0x4b, 0x1c, 0xd0, 0xf6, 0xc6, 0x25, 0x4a,
+	0xe3, 0x6d, 0x59, 0xd1, 0xda, 0xc6, 0xe3, 0xd0, 0xc2, 0x73, 0x70, 0x41, 0xe2, 0xc2, 0x4b, 0xf0,
+	0x7c, 0x68, 0x67, 0xd7, 0xae, 0xe3, 0xc0, 0xa9, 0xb9, 0xed, 0xce, 0xf8, 0x9b, 0xf9, 0xed, 0xcc,
+	0x27, 0x03, 0x60, 0x9a, 0x5c, 0xcf, 0xb3, 0x3c, 0x2d, 0x52, 0xde, 0xb9, 0xdd, 0xa8, 0x24, 0xfc,
+	0xc9, 0xc0, 0xbb, 0x48, 0x93, 0xeb, 0xe5, 0xa7, 0x5d, 0xf2, 0x99, 0x73, 0xe8, 0x24, 0x9b, 0x5b,
+	0x19, 0xb0, 0x29, 0x9b, 0x79, 0x82, 0xce, 0x7c, 0x08, 0x8e, 0x8a, 0x03, 0x67, 0xca, 0x66, 0x5d,
+	0xe1, 0xa8, 0x98, 0x3f, 0x07, 0x2f, 0xdf, 0xdc, 0xad, 0x2f, 0xbf, 0x15, 0x12, 0x83, 0xf6, 0x94,
+	0xcd, 0x06, 0xa2, 0x9f, 0x6f, 0xee, 0x16, 0xfa, 0xce, 0x5f, 0x82, 0xbf, 0xd5, 0x95, 0xd6, 0x2a,
+	0x89, 0xe5, 0x7d, 0xd0, 0x21, 0x15, 0x50, 0x28, 0xd2, 0x11, 0x7e, 0x0a, 0x6e, 0x7a, 0x75, 0x85,
+	0xb2, 0x08, 0xba, 0x94, 0xb3, 0x37, 0xdd, 0x19, 0xd5, 0x77, 0x19, 0xb8, 0x14, 0xa5, 0x73, 0xf8,
+	0x8b, 0x81, 0xaf, 0xd9, 0x84, 0xfc, 0xb2, 0x93, 0x58, 0xf0, 0x17, 0x00, 0xb9, 0x39, 0xae, 0x55,
+	0x6c, 0x19, 0x3d, 0x1b, 0x89, 0x08, 0x6c, 0x7b, 0xa3, 0x64, 0x42, 0x59, 0x87, 0xb2, 0x7d, 0x13,
+	0x88, 0x62, 0xfe, 0x0e, 0xb8, 0x7e, 0xfb, 0xda, 0xd0, 0x59, 0x11, 0xe1, 0xfb, 0xe7, 0xa7, 0x73,
+	0x3d, 0x8a, 0x79, 0x35, 0x06, 0xdb, 0x6f, 0xd5, 0x12, 0x63, 0x6c, 0xc4, 0x16, 0x1e, 0xf4, 0xac,
+	0x38, 0xfc, 0xcd, 0x60, 0x60, 0xf0, 0x30, 0x4b, 0x13, 0x94, 0x8f, 0xe2, 0x8b, 0xe0, 0xc9, 0x1e,
+	0x9f, 0x29, 0x69, 0x01, 0xcf, 0x0e, 0x00, 0x4d, 0x7a, 0xd5, 0x12, 0x13, 0x6c, 0x06, 0x17, 0x00,
+	0xfd, 0x52, 0x1f, 0x2e, 0x61, 0xdc, 0x7c, 0x96, 0x5d, 0x28, 0xab, 0x16, 0xda, 0xd8, 0x99, 0xd3,
+	0xdc, 0x59, 0xb8, 0x84, 0xc9, 0x41, 0x6b, 0x3e, 0x37, 0x66, 0x32, 0xc0, 0x54, 0xcd, 0x3f, 0x1f,
+	0x35, 0x39, 0xbd, 0x8a, 0x2e, 0x94, 0x30, 0x7c, 0xaf, 0xb0, 0x88, 0x3e, 0xe0, 0x31, 0xd6, 0x79,
+	0x06, 0x3d, 0xea, 0xae, 0x62, 0x1a, 0x51, 0x57, 0xb8, 0xfa, 0x1a, 0xc5, 0xe1, 0x3d, 0x8c, 0xaa,
+	0x36, 0x47, 0x58, 0xcb, 0xff, 0xfa, 0xf0, 0x31, 0xb4, 0x55, 0x86, 0x41, 0x67, 0xda, 0x9e, 0x79,
+	0x42, 0x1f, 0xc3, 0x1f, 0x0c, 0x4e, 0x2e, 0x64, 0xfe, 0x55, 0xe6, 0xe5, 0x03, 0x5f, 0xc3, 0x80,
+	0xc4, 0xa5, 0xdb, 0xcc, 0x90, 0x26, 0x0f, 0x43, 0x7a, 0x30, 0x9a, 0x8f, 0x35, 0x9f, 0xbf, 0x85,
+	0xf1, 0x8d, 0xd2, 0xb4, 0x19, 0x56, 0x5a, 0x87, 0xb4, 0x4f, 0x8d, 0x76, 0x7f, 0x90, 0xab, 0x96,
+	0x18, 0xea, 0xef, 0xa3, 0x0c, 0xff, 0xe1, 0xd2, 0x3f, 0x0c, 0x86, 0x25, 0x96, 0x1d, 0x48, 0x00,
+	0x3d, 0xdc, 0x6d, 0xb7, 0x12, 0x91, 0x90, 0xfa, 0xa2, 0xbc, 0xf2, 0x37, 0x70, 0x62, 0x89, 0xad,
+	0xff, 0x4c, 0x5b, 0x5e, 0x47, 0xae, 0xac, 0x37, 0xc0, 0xba, 0xf9, 0x97, 0x30, 0xa9, 0x41, 0xef,
+	0xd9, 0xf7, 0x59, 0x83, 0xba, 0xaa, 0x30, 0xaa, 0xb0, 0x0f, 0xad, 0xbb, 0x70, 0x3f, 0xd2, 0x1f,
+	0xea, 0xd2, 0xa5, 0xdf, 0xd5, 0xab, 0xbf, 0x01, 0x00, 0x00, 0xff, 0xff, 0x03, 0x35, 0x15, 0x3c,
+	0xbc, 0x04, 0x00, 0x00,
 }

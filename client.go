@@ -1,9 +1,9 @@
 package main
 
 import (
-	"net"
 	"fmt"
 	"github.com/golang/protobuf/proto"
+	"net"
 )
 
 const (
@@ -11,24 +11,24 @@ const (
 )
 
 type SongClient struct {
-	Port int32
+	Port             int32
 	RequestIdCounter int32
 }
 
 func Default() *SongClient {
-    return &SongClient{RequestIdCounter: 0}
+	return &SongClient{RequestIdCounter: 0}
 }
 
-func (c SongClient) Name() (string) {
+func (c SongClient) Name() string {
 	return fmt.Sprintf("Client%d", c.Port)
 }
 
-func (c *SongClient) NextRequestId() (string) {
+func (c *SongClient) NextRequestId() string {
 	c.RequestIdCounter++
 	return fmt.Sprintf("%s:%d", c.Name(), c.RequestIdCounter)
 }
 
-func (c *SongClient) RequestSongChunk(id int32, chunkind int32) (error) {
+func (c *SongClient) RequestSongChunk(id int32, chunkind int32) error {
 	fmt.Printf("%s requesting song chunk\n", c.Name())
 
 	adr := fmt.Sprintf("%s:%d", SERVER_HOST, SERVER_PORT)
@@ -40,18 +40,22 @@ func (c *SongClient) RequestSongChunk(id int32, chunkind int32) (error) {
 	}
 
 	fmt.Printf("%s established a connection with SongServer at %s\n", c.Name(), adr)
-	
+
 	// Learned what defer means, basically execute this line just before any `return` anywhere in the this function
-	// Similar to try-catch-finally in more traditional languages, nicer way to reduce boilerplate code 
+	// Similar to try-catch-finally in more traditional languages, nicer way to reduce boilerplate code
 	defer conn.Close()
 
-	req := &SongRequest{
-		RequestId: c.NextRequestId(),
-		ClientId: c.Name(),
-		Request: &SongRequest_SongChunkRequest{
-			SongChunkRequest: &SongChunkRequest{
-				Id: id,
-				ChunkIndex: chunkind,
+	req := &ServerRequest{
+		Request: &ServerRequest_SongRequest{
+			SongRequest: &SongRequest{
+				RequestId: c.NextRequestId(),
+				ClientId:  c.Name(),
+				Request: &SongRequest_SongChunkRequest{
+					SongChunkRequest: &SongChunkRequest{
+						Id:         id,
+						ChunkIndex: chunkind,
+					},
+				},
 			},
 		},
 	}
@@ -85,7 +89,7 @@ func (c *SongClient) RequestSongChunk(id int32, chunkind int32) (error) {
 
 	fmt.Printf("%s received %d bytes from SongServer\n", c.Name(), n)
 
-	res := &SongResponse{}
+	res := &ServerResponse{}
 	err = proto.Unmarshal(data[:n], res)
 
 	if err != nil {
