@@ -81,23 +81,23 @@ func (s *SongServer) SongChunk(req SongChunkRequest) (SongChunkResponse, error) 
 	}, nil
 }
 
-func (s *SongServer) SendResponseToClient(conn net.Conn, res *SongServerResponse) error {
+func (s *SongServer) SendResponseToClient(conn net.Conn, res *SongServerResponse) (int, error) {
 	s.response_chan <- *res
 	data, err := proto.Marshal(res)
 	if err != nil {
 		fmt.Println("Error while Marshaling response")
 		fmt.Println(err)
-		return err
+		return 0, err
 	}
 
 	n, err := conn.Write(data)
 	if err != nil {
 		fmt.Println("Error while writing bytes to connection")
 		fmt.Println(err)
-		return err
+		return n, err
 	}
 	fmt.Printf("SongServer sent %d bytes to client\n", n)
-	return nil
+	return n, nil
 
 }
 
@@ -165,7 +165,7 @@ func (s *SongServer) ProcessRequest(conn net.Conn) error {
 
 	res, err := s.Serve(*req)
 
-	err = s.SendResponseToClient(conn, &res)
+	_, err = s.SendResponseToClient(conn, &res)
 	if err != nil {
 		fmt.Println("Error while sending the response")
 		fmt.Println(err)
