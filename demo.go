@@ -12,21 +12,39 @@ const (
 var CLIENT_PORTS = [...]int32{4002, 4003, 4004}
 
 func main() {
-	// Start a server instance
-	var s = SongServer{}
-	go s.Run(SERVER_PORT)
 
-	// Give server some time to spin up
+	/*
+		This demo starts an instance of SongServer at port SERVER_PORT
+		Runs that instance in a separate Goroutine
+		and then sleeps for 1 second, to give it time to spin up
+
+		After that, it creates an instance of Client
+		and requests a chunk of a song using that client in a separate Goroutine.
+
+		At the end, it's doing basic synchronization w/ done_channel, and finally kills  the server.
+
+	*/
+
+	done_chan := make(chan bool)
+
+	var s = SongServer{}
+	go func() {
+		s.Run(SERVER_PORT)
+		done_chan <- true
+	}()
+
 	time.Sleep(1 * time.Second)
 
-	// Start one client instance
-	var c = SongClient{
+	var c = Client{
 		Port: CLIENT_PORTS[0],
 	}
-	go c.RequestSongChunk(100, 1)
+	go func() {
+		c.RequestSongChunk(100, 1)
+		done_chan <- true
+	}()
 
-	// Sleep so we make sure goroutines are executed
-	time.Sleep(10 * time.Second)
+	<-done_chan
+	<-done_chan
 
 	s.Close()
 }

@@ -1,17 +1,20 @@
 package main
 
+import "net"
+
 // Interface for Server-like objects
 type IRunnable interface {
 	Run(port int32) error
+	ProcessRequest(conn net.Conn) error
 	Close()
-
-	Process_request(req SongRequest) error
 }
 
-type IGetSong interface {
-	Get_song_chunk(req SongChunkRequest) (SongChunk, error)
+type ISongServer interface {
+	Serve(req SongServerRequest) (SongServerResponse, error)
+	SongChunk(req SongChunkRequest) (SongChunkResponse, error)
 }
 
-type IListIPs interface {
-	List_ips(req ListIPsRequest) (ListIPsResponse, error)
+type IPeerServer interface {
+	Serve(req PeerServerRequest) (PeerServerResponse, error)
+	ListPeers(req PeerListRequest) (PeerListResponse, error)
 }
