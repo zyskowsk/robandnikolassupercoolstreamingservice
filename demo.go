@@ -33,7 +33,7 @@ func main() {
 
 	var s = SongServer{}
 	go func() {
-		//s.Run(SONG_SERVER_PORT)
+		s.Run(SONG_SERVER_PORT)
 		done_chan <- true
 	}()
 
@@ -49,7 +49,7 @@ func main() {
 		Port: CLIENT_PORTS[0],
 	}
 	go func() {
-		// c.RequestSongChunk(100, 1)
+		c.RequestSongChunk(100, 1)
 		peers, _ := c.RequestPeersForSongId(100)
 		fmt.Println("Peers:")
 		for _, p := range peers {

@@ -15,11 +15,20 @@ type PeerServer struct {
 	listener      net.Listener
 	port          int32
 	response_chan chan PeerServerResponse
+	peer_map      map[int32][]string
 }
 
 func (s *PeerServer) Run(port int32) error {
 	s.port = port
 	s.response_chan = make(chan PeerServerResponse)
+	s.peer_map = make(map[int32][]string)
+
+	// Adding some dummy data for now
+	s.peer_map[100] = []string{
+		"peer1",
+		"peer2",
+	}
+
 	adr := fmt.Sprintf("%s:%d", PEER_SERVER_HOST, port)
 	l, err := net.Listen(CONN_TYPE, adr)
 	s.listener = l
@@ -86,6 +95,8 @@ func (s *PeerServer) Serve(req PeerServerRequest) (PeerServerResponse, error) {
 	switch x := req.Request.(type) {
 	case *PeerServerRequest_PeerListRequest:
 		peer_list_req := x.PeerListRequest
+		peers := s.peer_map[peer_list_req.SongId]
+
 		return PeerServerResponse{
 			BaseResponse: &BaseResponse{
 				RequestId: req.BaseRequest.RequestId,
@@ -95,7 +106,7 @@ func (s *PeerServer) Serve(req PeerServerRequest) (PeerServerResponse, error) {
 			Response: &PeerServerResponse_PeerListResponse{
 				PeerListResponse: &PeerListResponse{
 					SongId: peer_list_req.SongId,
-					Peers:  []string{"quavo", "takeoff"},
+					Peers:  peers,
 				},
 			},
 		}, nil
