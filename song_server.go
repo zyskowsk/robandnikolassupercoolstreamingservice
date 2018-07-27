@@ -152,8 +152,6 @@ func (s *SongServer) ProcessRequest(conn net.Conn) error {
 
 	if err != nil {
 		res := &SongServerResponse{}
-		fmt.Println(n)
-		fmt.Println(data[:n])
 		fmt.Println("Error while Unmarshaling request")
 		fmt.Println(err)
 		s.SendResponseToClient(conn, res)
