@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -11,7 +10,7 @@ const (
 )
 
 // No array constants in Go
-var CLIENT_PORTS = [...]int32{4003, 4004}
+var CLIENT_PORTS = [...]int32{4003, 25012}
 
 func main() {
 
@@ -45,16 +44,20 @@ func main() {
 
 	time.Sleep(1 * time.Second)
 
-	var c = Client{
+	var c1 = Client{
 		Port: CLIENT_PORTS[0],
 	}
+	var c2 = Client{
+		Port: CLIENT_PORTS[1],
+	}
 	go func() {
-		c.RequestSongChunk(100, 1)
-		peers, _ := c.RequestPeersForSongId(100)
-		fmt.Println("Peers:")
-		for _, p := range peers {
-			fmt.Println(p)
-		}
+		c1.Run()
+	}()
+	go func() {
+		c2.Run()
+	}()
+	go func() {
+		c1.PlaySong(100)
 		done_chan <- true
 	}()
 
@@ -62,6 +65,8 @@ func main() {
 	<-done_chan
 	<-done_chan
 
+	c2.Close()
+	c1.Close()
 	s.Close()
 	ps.Close()
 }

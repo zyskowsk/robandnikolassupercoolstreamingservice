@@ -25,8 +25,7 @@ func (s *PeerServer) Run(port int32) error {
 
 	// Adding some dummy data for now
 	s.peer_map[100] = []string{
-		"peer1",
-		"peer2",
+		fmt.Sprintf("%s:%d", "127.0.0.1", CLIENT_PORTS[1]),
 	}
 
 	adr := fmt.Sprintf("%s:%d", PEER_SERVER_HOST, port)

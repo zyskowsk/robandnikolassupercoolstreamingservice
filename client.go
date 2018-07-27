@@ -11,9 +11,14 @@ const (
 	SERVER_HOST = "127.0.0.1"
 )
 
+func play_song_chunk(chunk SongChunk) {
+	fmt.Println("Playing chunk %s\n", chunk.RawBytes)
+}
+
 type Client struct {
 	Port             int32
 	RequestIdCounter int32
+	SongServer       SongServer
 }
 
 func Default() *Client {
@@ -22,6 +27,14 @@ func Default() *Client {
 
 func (c Client) Name() string {
 	return fmt.Sprintf("Client%d", c.Port)
+}
+
+func (c *Client) Run() {
+	c.SongServer.Run(c.Port)
+}
+
+func (c *Client) Close() {
+	c.SongServer.Close()
 }
 
 func (c *Client) NextRequestId() string {
@@ -111,16 +124,50 @@ func (c *Client) RequestPeersForSongId(song_id int32) ([]string, error) {
 	return []string{}, nil
 }
 
-func (c *Client) RequestSongChunk(id int32, chunkind int32) error {
+func (c *Client) PlaySong(song_id int32) error {
+	song_server_adr := fmt.Sprintf("%s:%d", SERVER_HOST, SONG_SERVER_PORT)
+	chunkind := int32(0)
+
+	chunk, err := c.RequestSongChunk(song_server_adr, song_id, chunkind)
+	if err != nil {
+		fmt.Println("Error while playing song")
+		return err
+	}
+	play_song_chunk(chunk)
+	chunkind++
+
+	peers, err := c.RequestPeersForSongId(song_id)
+	if err != nil {
+		fmt.Println("Error while fetching peers")
+		return err
+	}
+
+	for len(chunk.RawBytes) > 0 {
+		curr_peer := peers[0]
+		chunk, err := c.RequestSongChunk(curr_peer, song_id, chunkind)
+
+		if err != nil {
+			fmt.Println("Error while playing song")
+			return err
+		}
+
+		play_song_chunk(chunk)
+		chunkind++
+	}
+
+	return nil
+}
+
+func (c *Client) RequestSongChunk(adr string, id int32, chunkind int32) (SongChunk, error) {
 	fmt.Printf("%s requesting song chunk\n", c.Name())
 
-	adr := fmt.Sprintf("%s:%d", SERVER_HOST, SONG_SERVER_PORT)
+	// adr := fmt.Sprintf("%s:%d", SERVER_HOST, SONG_SERVER_PORT)
 	conn, err := net.Dial(CONN_TYPE, adr)
 
 	if err != nil {
 		fmt.Println("Error connecting to SongServer")
 		fmt.Println(err)
-		return err
+		return SongChunk{}, err
 	}
 
 	fmt.Printf("%s established a connection with SongServer at %s\n", c.Name(), adr)
@@ -148,7 +195,7 @@ func (c *Client) RequestSongChunk(id int32, chunkind int32) error {
 	if err != nil {
 		fmt.Println("Error while Marshaling request")
 		fmt.Println(err)
-		return err
+		return SongChunk{}, err
 	}
 
 	n, err := conn.Write(data)
@@ -156,7 +203,7 @@ func (c *Client) RequestSongChunk(id int32, chunkind int32) error {
 	if err != nil {
 		fmt.Println("Error while writing bytes to connection")
 		fmt.Println(err)
-		return err
+		return SongChunk{}, err
 	}
 
 	fmt.Printf("%s sent request %s\n", c.Name(), req)
@@ -168,7 +215,7 @@ func (c *Client) RequestSongChunk(id int32, chunkind int32) error {
 	if err != nil {
 		fmt.Println("Error while reading bytes from connection")
 		fmt.Println(err)
-		return err
+		return SongChunk{}, err
 	}
 
 	fmt.Printf("%s received %d bytes from SongServer\n", c.Name(), n)
@@ -179,11 +226,16 @@ func (c *Client) RequestSongChunk(id int32, chunkind int32) error {
 	if err != nil {
 		fmt.Println("Error while Unmarshaling response")
 		fmt.Println(err)
-		return err
+		return SongChunk{}, err
 	}
 
 	fmt.Printf("%s received response %s\n", c.Name(), res)
 
-	// No error
-	return nil
+	switch x := res.Response.(type) {
+	case *SongServerResponse_SongChunkResponse:
+		song_chunk_res := x.SongChunkResponse
+		return *song_chunk_res.SongChunk, nil
+	default:
+		return SongChunk{}, nil
+	}
 }
