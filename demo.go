@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -28,7 +29,7 @@ func main() {
 
 	*/
 
-	done_chan := make(chan bool)
+	done_chan := make(chan bool, 3)
 
 	var s = SongServer{}
 	go func() {

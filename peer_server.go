@@ -33,12 +33,12 @@ func (s *PeerServer) Run(port int32) error {
 	s.listener = l
 
 	if err != nil {
-		fmt.Println("Error while starting PeerServer")
-		fmt.Println(err)
+		LoglnDebug("Error while starting PeerServer")
+		LoglnDebug(err)
 		return err
 	}
 
-	fmt.Printf("PeerServer listening on %s\n", adr)
+	LogDebug("PeerServer listening on %s\n", adr)
 
 	// Spin a new goroutine that logs responses
 	go s.ResponseLogger()
@@ -47,8 +47,8 @@ func (s *PeerServer) Run(port int32) error {
 		conn, err := s.listener.Accept()
 
 		if err != nil {
-			fmt.Println("Error while accepting connection, Listener closed")
-			fmt.Println(err)
+			LoglnDebug("Error while accepting connection, Listener closed")
+			LoglnDebug(err)
 			return err
 		}
 
@@ -62,12 +62,12 @@ func (s *PeerServer) Run(port int32) error {
 func (s *PeerServer) ResponseLogger() {
 	for {
 		res := <-s.response_chan
-		fmt.Printf("PeerServer sent a reponse %+v\n", res)
+		LogDebug("PeerServer sent a reponse %+v\n", res)
 	}
 }
 
 func (s *PeerServer) Close() {
-	fmt.Println("PeerServer stopping")
+	LoglnDebug("PeerServer stopping")
 	s.listener.Close()
 }
 
@@ -75,18 +75,18 @@ func (s *PeerServer) SendResponseToClient(conn net.Conn, res *PeerServerResponse
 	s.response_chan <- *res
 	data, err := proto.Marshal(res)
 	if err != nil {
-		fmt.Println("Error while Marshaling response")
-		fmt.Println(err)
+		LoglnDebug("Error while Marshaling response")
+		LoglnDebug(err)
 		return 0, err
 	}
 
 	n, err := conn.Write(data)
 	if err != nil {
-		fmt.Println("Error while writing bytes to connection")
-		fmt.Println(err)
+		LoglnDebug("Error while writing bytes to connection")
+		LoglnDebug(err)
 		return n, err
 	}
-	fmt.Printf("PeerServer sent %d bytes to client\n", n)
+	LogDebug("PeerServer sent %d bytes to client\n", n)
 	return n, nil
 }
 
@@ -120,33 +120,33 @@ func (s *PeerServer) ProcessRequest(conn net.Conn) error {
 	data := make([]byte, DATA_BUF_SIZE)
 	n, err := conn.Read(data)
 	if err != nil {
-		fmt.Println("Error while reading bytes from connection")
-		fmt.Println(err)
+		LoglnDebug("Error while reading bytes from connection")
+		LoglnDebug(err)
 		return err
 	}
 
-	fmt.Printf("PeerServer got %d bytes from (yet) unknown client\n", n)
+	LogDebug("PeerServer got %d bytes from (yet) unknown client\n", n)
 
 	req := &PeerServerRequest{}
 	err = proto.Unmarshal(data[:n], req)
 
 	if err != nil {
 		res := &PeerServerResponse{}
-		fmt.Println("Error while Unmarshaling request")
-		fmt.Println(err)
+		LoglnDebug("Error while Unmarshaling request")
+		LoglnDebug(err)
 		s.SendResponseToClient(conn, res)
 		return err
 	}
 
-	fmt.Println("PeerServer received the following request")
-	fmt.Println(req)
+	LoglnDebug("PeerServer received the following request")
+	LoglnDebug(req)
 
 	res, err := s.Serve(*req)
 
 	_, err = s.SendResponseToClient(conn, &res)
 	if err != nil {
-		fmt.Println("Error while sending the response")
-		fmt.Println(err)
+		LoglnDebug("Error while sending the response")
+		LoglnDebug(err)
 		return err
 	}
 
